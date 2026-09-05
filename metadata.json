@@ -1,0 +1,6 @@
+{
+  "name": "Shoply Admin",
+  "description": "Operations and administration platform for Shoply ecommerce: order fulfillment, payment verification, catalog sync, RBAC, and TOTP authentication.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
