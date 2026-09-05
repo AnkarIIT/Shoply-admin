@@ -36,28 +36,29 @@ export function base32Encode(buf: Buffer): string {
   let bits = 0;
   let value = 0;
   let out = '';
-  for (const byte of buf) {
-    value = (value << 8) | byte;
+  for (let i = 0; i < buf.length; i++) {
+    value = (value << 8) | buf[i];
     bits += 8;
     while (bits >= 5) {
       out += BASE32_ALPHABET[(value >>> (bits - 5)) & 31];
       bits -= 5;
+      value &= (1 << bits) - 1;
     }
   }
   if (bits > 0) {
     out += BASE32_ALPHABET[(value << (5 - bits)) & 31];
   }
-  return out; // unpadded (authenticator apps accept this for manual entry)
+  return out; // Unpadded RFC 4648 Base32 (Google Authenticator & MS Authenticator compatible)
 }
 
-function base32Decode(input: string): Buffer {
+export function base32Decode(input: string): Buffer {
   const cleaned = input.toUpperCase().replace(/=+$/g, '').replace(/[\s-]/g, '');
   let bits = 0;
   let value = 0;
   const bytes: number[] = [];
   for (const ch of cleaned) {
     const idx = BASE32_ALPHABET.indexOf(ch);
-    if (idx === -1) throw new Error('Invalid base32 secret');
+    if (idx === -1) throw new Error('Invalid base32 secret character: ' + ch);
     value = (value << 5) | idx;
     bits += 5;
     if (bits >= 8) {
