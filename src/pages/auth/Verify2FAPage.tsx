@@ -118,7 +118,7 @@ export const Verify2FAPage: React.FC = () => {
           <div className="mt-6 pt-5 border-t border-zinc-100 flex items-center justify-center gap-2 text-xs text-zinc-500">
             <span>Lost access to authenticator?</span>
             <button
-              onClick={() => navigate('/setup-2fa')}
+              onClick={() => navigate('/setup-2fa', { state: { email } })}
               className="font-semibold text-[#111111] hover:underline cursor-pointer"
             >
               Re-enroll 2FA

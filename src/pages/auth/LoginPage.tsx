@@ -120,8 +120,14 @@ export const LoginPage: React.FC = () => {
           </form>
 
           <div className="mt-6 pt-5 border-t border-zinc-100 flex items-center justify-between text-[11px] text-zinc-500">
-            <span>2FA enrollment happens on your first sign-in</span>
-            <span className="text-zinc-400">TOTP Protected</span>
+            <span>First time signing in?</span>
+            <button
+              type="button"
+              onClick={() => navigate('/setup-2fa')}
+              className="font-semibold text-[#FF5A36] hover:underline cursor-pointer"
+            >
+              Set up 2FA Authenticator
+            </button>
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { authService, TOTPSetupResult, getPendingEmail } from '../../services/authService';
 import { ShieldCheck, Copy, Check, ArrowRight, Smartphone, AlertCircle, RefreshCw } from 'lucide-react';
@@ -14,23 +14,26 @@ export const Setup2FAPage: React.FC = () => {
   const [initLoading, setInitLoading] = useState(true);
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
+    const fromState = location.state?.email;
     const pendingEmail = getPendingEmail();
-    const accountEmail = currentUser?.email || pendingEmail || '';
+    const accountEmail = currentUser?.email || (typeof fromState === 'string' ? fromState : '') || pendingEmail || '';
     setEmail(accountEmail);
     const loadSetup = async () => {
       try {
         const data = await authService.setup2FA(accountEmail);
         setSetupData(data);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Failed to generate 2FA setup', err);
+        setError(err?.message || 'Failed to generate 2FA setup details');
       } finally {
         setInitLoading(false);
       }
     };
     loadSetup();
-  }, []);
+  }, [currentUser, location.state]);
 
   const handleCopySecret = () => {
     if (setupData?.secret) {
